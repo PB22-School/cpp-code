@@ -1,0 +1,16 @@
+#include <iostream>
+using namespace std;
+
+void countdown(int n) {
+    if (n == 0) {
+        cout << "Blastoff!" << endl;
+    } else {
+        cout << n << endl;
+        countdown(n-1);
+    }
+}
+
+int main() {
+    countdown(-1);
+    //the code runs and the number gets really low, then it throws a "segmentation fault" after -261497.
+}
