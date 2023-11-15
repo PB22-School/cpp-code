@@ -9,7 +9,7 @@ struct Dinosaur {
 
     void Roar() const;
     string to_string() const;
-    bool Fight(Dinosaur);
+    void Fight(Dinosaur);
     void Eat();
 
     Dinosaur(string, string, double, int, int);

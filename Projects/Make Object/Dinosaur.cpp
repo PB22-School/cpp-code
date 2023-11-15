@@ -28,25 +28,26 @@ void Dinosaur::Eat() {
     weight += r*5.125;
     strength += int(r*1.5);
     health += int(r*2.25);
-    cout << name << " eats " << r << " plants and gains:\n" << r*5.125 << " weight\n" << int(r*1.5) << " strength\n" << int(r*2.25) << " health\n";
+    cout << name << " eats " << r << " plants and gains:\n" << r*5.125 << " weight\n" << int(r*1.5) << " strength\n" << int(r*2.25) << " health\n\n";
 }
 
 void Dinosaur::Roar() const {
-    cout << name << " Lets out a roar:\n" << growlSound << endl;
+    cout << name << " Lets out a roar:\n" << growlSound << endl << endl;
 }
 
-bool Dinosaur::Fight(Dinosaur dino2) {
+void Dinosaur::Fight(Dinosaur dino2) {
+    cout << name << " Starts a clash with " << dino2.name << "!\n"; 
     while (! (dino2.health <= 0 && health <= 0)) {
         dino2.health -= strength / (dino2.weight/100);
         health -= dino2.strength / (weight/100);
     }
     if(dino2.health <= 0) {
         dino2.health = 0;
-        return true;
+        cout << name << " Wins against " << dino2.name << "!\n";
     }
     else {
         health = 0;
-        return false;
+        cout << name << " Looses against " << dino2.name << "!\n";
     }
 }
 
