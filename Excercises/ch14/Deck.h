@@ -8,6 +8,8 @@ struct Deck {
     int find_card(const Card card) const;
     int find_lowest(int l, int h) const;
     void swap_cards(int swap1, int swap2);
+    void sort();
+    void print() const;
 
     Deck(int n);
     Deck();
@@ -57,4 +59,18 @@ int Deck::find_lowest(int l, int h) const {
         }
     }
     return x;
+}
+
+void Deck::sort() {
+    for (int i = 0; i < cards.size() - 1; i++) {
+        Card lowest = find_lowest(i, i+1);
+        cards[i] = lowest;
+    }
+}
+
+void Deck::print() const
+{
+    for (int i = 0; i < cards.size(); i++) {
+        cout << cards[i].to_string() << endl;
+    }
 }
