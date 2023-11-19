@@ -6,6 +6,7 @@ struct Deck {
     vector<Card> cards;
 
     int find_card(const Card card) const;
+    int find_lowest(int l, int h) const;
     void swap_cards(int swap1, int swap2);
 
     Deck(int n);
@@ -44,4 +45,16 @@ void Deck::swap_cards(int swap1, int swap2) {
     Card i = cards[swap1];
     cards[swap1] = cards[swap2];
     cards[swap2] = i;
+}
+
+int Deck::find_lowest(int l, int h) const {
+    int max = 0;
+    int x = 0;
+    for (int i = l; i <= l + h; i++) {
+        if (cards[i].rank >= max) {
+            max = cards[i].rank;
+            x = i;
+        }
+    }
+    return x;
 }
