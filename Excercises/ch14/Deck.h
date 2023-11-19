@@ -6,6 +6,7 @@ struct Deck {
     vector<Card> cards;
 
     int find_card(const Card card) const;
+    void swap_cards(int swap1, int swap2);
 
     Deck(int n);
     Deck();
@@ -37,4 +38,10 @@ int Deck::find_card(const Card card) const
         if (cards[i].equals(card)) return i;
     }
     return -1;
+}
+
+void Deck::swap_cards(int swap1, int swap2) {
+    Card i = cards[swap1];
+    cards[swap1] = cards[swap2];
+    cards[swap2] = i;
 }
