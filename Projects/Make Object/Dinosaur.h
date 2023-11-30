@@ -1,3 +1,9 @@
+/*
+Authors: Parker Borek and Isaac Studley
+Novemeber 17th, 2023
+CSC 222
+*/
+
 #include <string>
 using namespace std;
 struct Dinosaur {
