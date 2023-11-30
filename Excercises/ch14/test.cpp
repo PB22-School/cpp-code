@@ -3,7 +3,9 @@
 using namespace std;
 
 int main() {
-    Deck deck;
-    Card card(SPADES,KING);
-    cout << deck.find_card(card) << endl;
+   Deck deck;
+   deck.shuffle();
+   deck = deck.merge_sort();
+   cout << "\n\nSPACE\n\n";
+   deck.print();
 }
