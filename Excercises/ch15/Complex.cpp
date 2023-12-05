@@ -19,6 +19,11 @@ void Complex::calculate_cartesian()
     polar = false
 }
 
+Complex::Complex() {
+    mag = 0; theta = 0;
+    polar = true;
+}
+
 Complex::Complex(double m, double t) {
     // cartesian
     mag = m; theta = t;
@@ -76,6 +81,21 @@ Complex Complex::operator / (Complex& c)
     if (polar == false) calculate_polar();
     if (c.polar == false) c.calculate_polar();
     return Complex(mag / c.mag, theta - c.theta, POLAR);
+}
+
+Complex Complex::abs() 
+{
+    Complex n();
+    if (polar) {
+        n.theta = abs(theta);
+        n.mag = abs(mag);
+    }
+    else {
+        n.real = abs(real);
+        n.imag = abs(imag);
+    }
+    n.polar = polar;
+    return n;
 }
 
 string Complex::str_cartesian()
