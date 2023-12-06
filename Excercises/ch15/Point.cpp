@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Point.h"
+using namespace std;
 
 double Point::get_x() 
 {
@@ -26,7 +27,7 @@ Point::Point(double x, double y)
 
 string Point::str() 
 {
-    return "(" + to_string(x) + "," + to_string(y) + ")"
+    return "(" + to_string(x) + "," + to_string(y) + ")";
 }
 
 Point Point::operator + (Point point) 
@@ -41,7 +42,7 @@ Point Point::operator - (Point point)
 
 Point Point::operator * (double scalar) 
 {
-    return Point(x * scalar, y * scalar)
+    return Point(x * scalar, y * scalar);
 }
 
 double Point::operator * (Point point) 
