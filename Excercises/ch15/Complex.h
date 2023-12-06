@@ -23,6 +23,7 @@ public:
     Complex(double m, double t, Flag);
 
     // accessors
+    bool get_polar();
     double get_real();
     double get_imag();
     double get_mag();
@@ -37,3 +38,5 @@ public:
     string str_cartesian();
     string str_polar();
 };
+
+ostream& operator<<(ostream& os, Complex& c);

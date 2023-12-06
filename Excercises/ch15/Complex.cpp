@@ -1,8 +1,6 @@
 #include "Complex.h"
 using namespace std;
 
-enum Flag {POLAR};
-
 void Complex::calculate_polar()
 {
     mag = sqrt(real * real + imag * imag);
@@ -16,7 +14,7 @@ void Complex::calculate_cartesian()
     real = mag * cos(theta);
     imag = mag * sin(theta);
     // I added a "polar = false"
-    polar = false
+    polar = false;
 }
 
 Complex::Complex() {
@@ -35,6 +33,11 @@ Complex::Complex(double m, double t, Flag) {
     // polar
     mag = m; theta = t;
     polar = true;
+}
+
+bool Complex::get_polar() 
+{
+    return polar;
 }
 
 double Complex::get_real()
@@ -85,17 +88,14 @@ Complex Complex::operator / (Complex& c)
 
 Complex Complex::abs() 
 {
-    Complex n();
     if (polar) {
-        n.theta = abs(theta);
-        n.mag = abs(mag);
+        return Complex(std::abs(mag), std::abs(theta));
+        
     }
     else {
-        n.real = abs(real);
-        n.imag = abs(imag);
+        return Complex(std::abs(real), std::abs(imag), POLAR);
+
     }
-    n.polar = polar;
-    return n;
 }
 
 string Complex::str_cartesian()
@@ -108,4 +108,15 @@ string Complex::str_polar()
     string theta = to_string(get_theta());
     string mag = to_string(get_mag());
     return mag  + "e^" + theta + "i";
+}
+
+ostream& operator<<(ostream& os, Complex& c)
+{
+    if (c.get_polar()) {
+        os << c.str_polar();
+    }
+    else {
+        os << c.str_cartesian();
+    }
+    return os;
 }
