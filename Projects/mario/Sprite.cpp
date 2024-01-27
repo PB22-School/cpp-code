@@ -25,7 +25,7 @@ void Sprite::updateVars(string filepath, SDL_Renderer* renderer, double scale = 
     string end = "sprites/" + filepath + ".png";
     this->image = IMG_LoadTexture(renderer, end.c_str());
     if (!image) {
-        cout << "it's fucked." << endl;
+        cout << "it's not working." << endl;
     }
     SDL_QueryTexture(image,NULL,NULL,&rect.w,&rect.h);
     this->sizeX = rect.w;
@@ -40,7 +40,7 @@ void Sprite::updateVars(string filepath, SDL_Renderer* renderer, double x, doubl
     string end = "sprite/" + filepath + ".png";
     this->image = IMG_LoadTexture(renderer, end.c_str());
     if (!image) {
-        cout << "it's fucked." << endl;
+        cout << "it's not working." << endl;
     }
     SDL_QueryTexture(image,NULL,NULL,&rect.w,&rect.h);
     this->sizeX = rect.w;

@@ -20,11 +20,41 @@ float getDelta(Uint64 current, Uint64 previous) {
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
+const double GRAVITY = 0.8;
 
-void updateGoomba(double delta, CharacterController& goomba, CharacterController& mario, TileSet* tiles) {
+void updateGoomba(double delta, CharacterController& goomba, CharacterController& mario, TileSet tiles) {
     SDL_Point p = goomba.getPosition();
-    //goomba.place_meeting();
-    goomba.update(delta,{});
+    goomba.update(delta,{},tiles);
+}
+
+void updateMario(double delta, CharacterController& mario, vector<CharacterController> objects, TileSet tiles, const Uint8* keys) {
+    mario.hsp = keys[SDL_SCANCODE_D] - keys[SDL_SCANCODE_A];
+    if (keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT]) {
+        mario.fps(20);
+        mario.speed = 375;
+    }
+    else {
+        mario.fps(15);
+        mario.speed = 250;
+    }
+    if (mario.surroundTiles[mario.INDEX][mario.BOTTOM]) {
+        mario.vsp = 0;
+        if(keys[SDL_SCANCODE_SPACE]) {
+            mario.vsp = -500 * (1/GRAVITY);
+        }
+    }
+    else {
+        //mario.vsp += GRAVITY;
+        /*
+        vector<int> c = mario.surroundTiles[mario.INDEX];
+        cout << "[" << c[0];
+        for(int i = 1; i < c.size(); i++) {
+            cout << "," << c[i];
+        }
+        cout << "]" << endl;
+        */
+    }
+    mario.update(delta,objects,tiles);
 }
 
 int main(int argc, char* argv[]) {
@@ -47,23 +77,29 @@ int main(int argc, char* argv[]) {
     Uint64 previousTime = SDL_GetPerformanceCounter();
 
     TileSet tiles(filenames, animations, renderer, 1.75);
+    tiles.fps = 5;
     tiles.readData("level");
     SDL_Point point;
     vector<SDL_Point> goombasP;
-    vector<SDL_Point> coinsP;
-    tiles.ready(renderer,point,goombasP,coinsP);
+    tiles.ready(renderer,point,goombasP);
 
-    vector<CharacterController> goombas;
+    vector<CharacterController> objects;
 
-    CharacterController mario({"Mario/1","Mario/2","Mario/3"},renderer, 4, point.x, point.y,5);
+    CharacterController mario({"Mario/1","Mario/2","Mario/3"},renderer, 1.75 * 1.75, point.x, point.y,250,"Mario");
+    mario.fps(15);
+    mario.update(0,{},tiles);
 
     for (int i = 0; i < goombasP.size(); i++) {
         SDL_Point p = goombasP[i];
-        CharacterController c({"Goomba/1","Goomba/2"},renderer, 4, p.x,p.y,5);
-        goombas.push_back(c);
+        CharacterController c({"Goomba/1","Goomba/2"},renderer, 1.75 * 1.75, p.x,p.y,5,"Goomba");
+        objects.push_back(c);
+        c.update(0,{},tiles);
     }
 
     SDL_Event e; 
+
+    vector<char> keys;
+
     bool quit = false; 
     while( quit == false ){
         Uint64 currentTime = SDL_GetPerformanceCounter();
@@ -71,22 +107,26 @@ int main(int argc, char* argv[]) {
         previousTime = currentTime;
 
         while( SDL_PollEvent( &e ) ){
-            if( e.type == SDL_QUIT ) quit = true; 
+            if( e.type == SDL_QUIT ) quit = true;
         }
+
+        const Uint8* state = SDL_GetKeyboardState(nullptr);
 
         tiles.update(delta,renderer);
         vector<char> c = {'n'};
-        for (int i = 0; i < goombas.size(); i++) {
-            updateGoomba(delta, goombas[i],mario,&tiles);
+        for (int i = 0; i < objects.size(); i++) {
+            updateGoomba(delta, objects[i],mario,tiles);
         }
-        mario.update(delta,c);
-        //anim.update(delta);
+
+        updateMario(delta,mario,objects,tiles,state);
         
         SDL_RenderClear(renderer);
 
         tiles.draw(renderer);
+        for (int i = 0; i < objects.size(); i++) {
+            objects[i].draw(renderer);
+        }
         mario.draw(renderer);
-        //anim.draw(renderer);
 
         SDL_RenderPresent(renderer);
     }

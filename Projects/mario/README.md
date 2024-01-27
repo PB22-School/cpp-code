@@ -12,7 +12,7 @@ It's more like a game engine that is used to make super mario bros, it has a wor
 \
 All in all, I made this project way more complicated than it probably needed to be, and I plan to work on it a little bit more in the near future.\
 \
-For now the Tileset and Animation Players are the only thing that really work.\
+For now the Tileset and Animation Players are the only thing that really work, along with some basic character movement.  It's still in many ways a work-in-progress.\
 \
 The level editor is a little hard to look at so here's a quick explanation:\
 \

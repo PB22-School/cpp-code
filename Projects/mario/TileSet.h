@@ -17,15 +17,15 @@ class TileSet : public GameObject {
     double scale;
     vector<Sprite> tiles;
     bool animated = false;
-    int fps = 1;
     int animationLength;
     double frame = 0;
     public:
+    int fps = 1;
     TileSet(vector<string> filenames, SDL_Renderer* renderer, double scale);
     TileSet(vector<string> filenames, vector<int> animations, SDL_Renderer* renderer, double scale);
     void readData(string filename);
     void draw(SDL_Renderer* renderer);
     void update(double delta, SDL_Renderer* renderer);
-    void ready(SDL_Renderer* renderer, SDL_Point& mario, vector<SDL_Point>& goombas, vector<SDL_Point>& coins);
-    bool getCollide(SDL_Rect rect);
+    void ready(SDL_Renderer* renderer, SDL_Point& mario, vector<SDL_Point>& goombas);
+    vector<vector<int>> getCollide(SDL_Rect rect);
 };

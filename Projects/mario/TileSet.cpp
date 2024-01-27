@@ -69,27 +69,20 @@ void TileSet::readData(string filename) {
     }
 }
 
-void TileSet::ready(SDL_Renderer* renderer, SDL_Point& mario, vector<SDL_Point>& goombas, vector<SDL_Point>&coins) {
+void TileSet::ready(SDL_Renderer* renderer, SDL_Point& mario, vector<SDL_Point>& goombas) {
     for (int row = 0; row < customData.size(); row++) {
         for (int i = 0; i < customData[row].size(); i++) {
             if (customData[row][i] == 3) {
                 //makes Mario
-                mario.x = row * tileSize * scale;
-                mario.y = i * tileSize * scale;
+                mario.x = i * tileSize * scale;
+                mario.y = row * tileSize * scale;
             }
             else if(customData[row][i] == 4) {
                 //makes a Goomba
                 SDL_Point p;
-                p.x = row * tileSize * scale;
-                p.y = i * tileSize * scale;
+                p.x = i * tileSize * scale;
+                p.y = row * tileSize * scale;
                 goombas.push_back(p);
-            }
-            else if(customData[row][i] == 5) {
-                // makes a Coin
-                SDL_Point p;
-                p.x = row * tileSize * scale;
-                p.y = i * tileSize * scale;
-                coins.push_back(p);
             }
         }
     }
@@ -131,22 +124,50 @@ void TileSet::update(double delta, SDL_Renderer* renderer) {
     }
 }
 
-bool TileSet::getCollide(SDL_Rect rect) {
+vector<vector<int>> TileSet::getCollide(SDL_Rect rect) {
     /*
-    takes a rect and gets the 4 tiles it overlaps on
+    takes a rect and gets the 9 tiles around it
     */
     SDL_Point p;
-    p.x = int( rect.x / (scale * tileSize));
-    p.y = int( rect.y / (scale * tileSize));
+    vector<vector<int>> v;
+    vector<int> index;
+    vector<int> data;
+    SDL_Point br;
+    br.x = rect.x + rect.w;
+    br.y = rect.y + rect.h;
+    p.x = int( br.x / (scale * tileSize));
+    p.x = int( br.y / (scale * tileSize));
+    //p.x = int(int((rect.x + rect.w) / (scale * tileSize)) + int((rect.x) / (scale * tileSize)) / 2);
+    //p.x = int(int((rect.y + rect.h) / (scale * tileSize)) + int((rect.y) / (scale * tileSize)) / 2);
+    //for(int z = 0; z < 1; z++) {
+        /*if (z != 0) {
+            p.x = int( rect.x / (scale * tileSize));
+            p.y = int( rect.y / (scale * tileSize));
+        }*/
     for (int i = -1; i < 2; i++) {
+        // (-1,)
         for(int q = -1; q < 2; q++) {
-            if (indexData[p.x + i][p.y + q] != 0) {
-                return true;
+            if (p.y + q < indexData.size() && p.x + i < indexData[0].size()) {
+                //if (!z) {
+                index.push_back(indexData[p.y + q][p.x + i]);
+                data.push_back(customData[p.y + q][p.y + i]);
+                /*}
+                else {
+                    if (index[(i+1)*3 + (q+1)] == 0) {
+                        cout << "original : " << index[(i+1)*3 + (q+1)];
+                        index[(i+1)*3 + (q+1)] = indexData[p.y + q][p.x + i];
+                        cout << "altered : " << index[(i+1)*3 + (q+1)];
+                    }
+                }*/
             }
-            else if(customData[p.x + i][p.y + q] == 6) {
-                customData[p.x + i][p.y + q] = 0;
+            else {
+                index.push_back(0);
+                data.push_back(0);
             }
         }
     }
-
+    //}
+    v.push_back(index);
+    v.push_back(data);
+    return v;
 }

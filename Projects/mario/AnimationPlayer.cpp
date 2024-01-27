@@ -28,6 +28,8 @@ AnimationPlayer::AnimationPlayer() {
 SDL_Point AnimationPlayer::getSize(int index) {
     SDL_Point p;
     SDL_QueryTexture(animation[index],NULL,NULL,&p.x,&p.y);
+    p.x *= scale;
+    p.y *= scale;
     return p;
 }
 
@@ -51,7 +53,7 @@ void AnimationPlayer::draw(SDL_Renderer* renderer, double x, double y) {
     rect.y = y;
     rect.w = int(sizeX * scale);
     rect.h = int(sizeY * scale);
-    SDL_Texture* tex = animation[0];
+    SDL_Texture* tex = animation[int(frame)];
     if (frame >= 0 && frame < animation.size()) {
         if (tex) {
             SDL_RenderCopy(renderer,tex,NULL,&rect);

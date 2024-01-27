@@ -7,14 +7,18 @@
 #include <iostream>
 using namespace std;
 
-CharacterController::CharacterController(vector<string> filenames, SDL_Renderer* renderer, double scale, double x, double y, double speed = 5) : anim(filenames, renderer, scale, x, y){
+CharacterController::CharacterController(vector<string> filenames, SDL_Renderer* renderer, double scale, double x, double y, double speed = 5, string name = "Undefined") : anim(filenames, renderer, scale, x, y){
     setPosition(x,y);
     this->speed = speed;
+    this->name = name;
     // after this constructor is called, the anim variable just deletes itself and is re-made blankly for some reason
 }
 
 void CharacterController::draw(SDL_Renderer* renderer) {
     SDL_Point p = getPosition();
+    SDL_SetRenderDrawColor(renderer,0,255,0,255);
+    SDL_RenderDrawRect(renderer,&rect);
+    SDL_SetRenderDrawColor(renderer,0,0,0,255);
     anim.draw(renderer, p.x, p.y);
 }
 
@@ -27,19 +31,27 @@ void CharacterController::setRect() {
     rect.h = r.y;
 }
 
-void CharacterController::update(double delta, vector<char>) {
+void CharacterController::update(double delta, vector<CharacterController> objects, TileSet tiles) {
     anim.update(delta);
+    addPosition(hsp * delta * speed, vsp * delta);
     setRect();
-    addPosition(hsp * delta * speed, vsp * delta * speed);
+    surroundTiles = tiles.getCollide(rect);
+    bodyCollide = ins_meeting(objects);
 }
 
-bool CharacterController::searchKeys(char key, vector<char> keys) {
-    for (int i = 0; i < keys.size(); i++) {
-        if (key == keys[i]) {
-            return true;
-        }
-    }
-    return false;
+void CharacterController::fps(int s) {
+    anim.fps = s;
+}
+
+void CharacterController::place_meeting(double delta, TileSet tiles, double xOffset, double yOffset) {
+    // gets the next frame's surroundTiles early 
+    // (to see if something is about to collide)
+    SDL_Rect cur;
+    cur.x = rect.x + xOffset;
+    cur.y = rect.y + yOffset;
+    cur.w = rect.w;
+    cur.h = rect.h;
+    surroundTiles = tiles.getCollide(rect);
 }
 
 CharacterController CharacterController::copy(SDL_Renderer* renderer) {
@@ -49,13 +61,13 @@ CharacterController CharacterController::copy(SDL_Renderer* renderer) {
     return character;
 }
 
-CharacterController CharacterController::ins_meeting(vector<CharacterController> chars) {
+CharacterController* CharacterController::ins_meeting(vector<CharacterController>& chars) {
     for (int i = 0; i < chars.size(); i++) {
         if (chars[i].collideRect(rect)) {
-            return chars[i];
+            return &chars[i];
         }
     }
-    return CharacterController();
+    return nullptr;
 }
 
 bool CharacterController::collideRect(SDL_Rect other) {
